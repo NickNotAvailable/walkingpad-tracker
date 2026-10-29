@@ -7,13 +7,13 @@ SEARCH_TERMS = ["walkingpad", "walking pad", "kingsmith"]
 
 SITES = [
     {"name": "MyMarket.ge", "kind": "marketplace",
-     "url": "https://www.mymarket.ge/ka/search/?Keyword={q}", "where": "home"},
+     "url": "https://mymarket.ge/products/?Keyword={q}", "where": "home"},
     {"name": "SS.ge", "kind": "marketplace",
      "url": "https://ss.ge/ka/sales/list?Query={q}"},
     {"name": "Extra.ge", "kind": "marketplace",
      "url": "https://extra.ge/search?q={q}"},
     {"name": "Zoommer.ge", "kind": "retailer",
-     "url": "https://zoommer.ge/ka/search?q={q}", "where": "home"},
+     "url": "https://zoommer.ge/search/{q}", "where": "home"},
     {"name": "Alta.ge", "kind": "retailer",
      "url": "https://alta.ge/search?q={q}", "where": "home"},
     {"name": "Elit Electronics (ee.ge)", "kind": "retailer",
