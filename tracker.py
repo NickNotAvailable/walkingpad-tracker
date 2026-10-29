@@ -263,7 +263,7 @@ def main():
     known = state.setdefault("listings", {})
     first_run = not known
 
-    results, failed, unsure = {}, {}, []
+    results, failed, unsure, counts = {}, {}, [], {}
     with sync_playwright() as p:
         if WHERE == "home":
             # Your own Google Chrome, visible on screen, on your home internet.
@@ -285,6 +285,7 @@ def main():
                 results.update(found)
                 log(f"OK   {site['name']}: {len(found)} Z1/C2 listing(s), "
                     f"{related} WalkingPad-related link(s) on the results page")
+                counts[site["name"]] = {"z1_c2": len(found), "walkingpad_related": related}
                 if related == 0:
                     unsure.append(site["name"])
             except Exception as e:
@@ -332,6 +333,7 @@ def main():
         f"{len(failed)} site(s) failed.")
     state["last_run"] = ts.isoformat()
     state["last_failed_sites"] = failed
+    state["last_site_results"] = counts
     with open(STATE_FILE, "w", encoding="utf-8") as f:
         json.dump(state, f, ensure_ascii=False, indent=1, sort_keys=True)
     return 0
