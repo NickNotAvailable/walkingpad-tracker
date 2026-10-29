@@ -27,8 +27,8 @@ PRICE_DROP_PCT = 5           # notify if price falls at least this much
 MAX_MESSAGES_PER_RUN = 25
 
 BRAND_RE = re.compile(r"walking\s*pad|kingsmith|king\s*smith|ვოლქინგ|уокинг", re.I)
-MODEL_RES = {"Z1": re.compile(r"(?<![a-z0-9])z1(?![0-9])", re.I),
-             "C2": re.compile(r"(?<![a-z0-9])c2(?![0-9])", re.I)}
+MODEL_RES = {"Z1": re.compile(r"(?:(?<![a-z0-9])|(?<=pad))z1(?![0-9])", re.I),
+             "C2": re.compile(r"(?:(?<![a-z0-9])|(?<=pad))c2(?![0-9])", re.I)}
 USED_RE = re.compile(r"\bused\b|second[\s-]?hand|მეორად|ნახმარ|б/у|подержан", re.I)
 NEW_RE = re.compile(r"\bnew\b|ახალი|новы", re.I)
 TREADMILL_RE = re.compile(r"treadmill|სარბენ|ბილიკ|беговая|дорожк", re.I)

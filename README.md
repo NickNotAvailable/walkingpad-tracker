@@ -24,7 +24,7 @@ Settings → Secrets and variables → Actions:
 - `TELEGRAM_CHAT_ID` – from the `find-chat-id` run
 
 ## Mac (for sites that block GitHub)
-MyMarket.ge, Zoommer.ge, Alta.ge and ee.ge block GitHub's servers, so your Mac
+MyMarket.ge, Zoommer.ge and ee.ge block GitHub's servers, so your Mac
 checks them from your home internet once a day (sites marked `"where": "home"`
 in `sites.py`). Setup, in Terminal:
 

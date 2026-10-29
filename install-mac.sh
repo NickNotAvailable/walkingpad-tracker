@@ -56,4 +56,4 @@ echo "==> Running the first check now (a Chrome window will open briefly)"
 tail -n 12 tracker.log
 launchctl load "$PLIST"
 echo
-echo "All set. Your Mac will check MyMarket, Zoommer, Alta and ee.ge once a day."
+echo "All set. Your Mac will check MyMarket, Zoommer and ee.ge once a day."

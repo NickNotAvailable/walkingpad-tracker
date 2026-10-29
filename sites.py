@@ -14,8 +14,6 @@ SITES = [
      "url": "https://extra.ge/search?q={q}"},
     {"name": "Zoommer.ge", "kind": "retailer",
      "url": "https://zoommer.ge/search/{q}", "where": "home"},
-    {"name": "Alta.ge", "kind": "retailer",
-     "url": "https://alta.ge/search?q={q}", "where": "home"},
     {"name": "Elit Electronics (ee.ge)", "kind": "retailer",
      "url": "https://ee.ge/search/{q}", "where": "home"},
     # Metromart.ge: its own search page gives a server error, so it's left out for now.
