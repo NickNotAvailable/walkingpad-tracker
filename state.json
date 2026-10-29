@@ -1,5 +1,23 @@
 {
  "last_failed_sites": {},
- "last_run": "2026-10-29T18:16:32.576410+00:00",
+ "last_run": "2026-10-29T18:18:52.662209+00:00",
+ "last_site_results": {
+  "Extra.ge": {
+   "walkingpad_related": 0,
+   "z1_c2": 0
+  },
+  "Megatechnica.ge": {
+   "walkingpad_related": 0,
+   "z1_c2": 0
+  },
+  "SS.ge": {
+   "walkingpad_related": 0,
+   "z1_c2": 0
+  },
+  "Veli.store": {
+   "walkingpad_related": 0,
+   "z1_c2": 0
+  }
+ },
  "listings": {}
 }
