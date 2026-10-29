@@ -12,7 +12,7 @@ import re
 import sys
 import time
 from datetime import datetime, timezone
-from urllib.parse import quote_plus, urlsplit, urlunsplit
+from urllib.parse import quote, urlsplit, urlunsplit
 
 import requests
 from playwright.sync_api import sync_playwright
@@ -140,7 +140,7 @@ def scrape_site(page, site):
     related = set()
     errors = []
     for term in SEARCH_TERMS:
-        url = site["url"].format(q=quote_plus(term))
+        url = site["url"].format(q=quote(term))
         for attempt in (1, 2):
             try:
                 resp = page.goto(url, wait_until="domcontentloaded", timeout=45000)

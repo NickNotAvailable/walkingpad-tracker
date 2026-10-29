@@ -9,7 +9,7 @@ SITES = [
     {"name": "MyMarket.ge", "kind": "marketplace",
      "url": "https://www.mymarket.ge/ka/search/?Keyword={q}", "where": "home"},
     {"name": "SS.ge", "kind": "marketplace",
-     "url": "https://ss.ge/ka/search?query={q}"},
+     "url": "https://ss.ge/ka/sales/list?Query={q}"},
     {"name": "Extra.ge", "kind": "marketplace",
      "url": "https://extra.ge/search?q={q}"},
     {"name": "Zoommer.ge", "kind": "retailer",
@@ -17,11 +17,10 @@ SITES = [
     {"name": "Alta.ge", "kind": "retailer",
      "url": "https://alta.ge/search?q={q}", "where": "home"},
     {"name": "Elit Electronics (ee.ge)", "kind": "retailer",
-     "url": "https://ee.ge/search?q={q}", "where": "home"},
-    {"name": "Metromart.ge", "kind": "retailer",
-     "url": "https://metromart.ge/shop/search?q={q}"},
+     "url": "https://ee.ge/search/{q}", "where": "home"},
+    # Metromart.ge: its own search page gives a server error, so it's left out for now.
     {"name": "Megatechnica.ge", "kind": "retailer",
-     "url": "https://megatechnica.ge/ge/search?q={q}"},
+     "url": "https://www.megatechnica.ge/ka/all?title={q}"},
     {"name": "Veli.store", "kind": "retailer",
      "url": "https://veli.store/search?q={q}"},
 ]
