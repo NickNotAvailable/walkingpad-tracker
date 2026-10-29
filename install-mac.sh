@@ -16,7 +16,7 @@ if ! command -v uv >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/uv" ]; then
 fi
 UV="$(command -v uv || echo "$HOME/.local/bin/uv")"
 cd "$DIR"
-"$UV" venv --quiet --python 3.12 .venv
+[ -x .venv/bin/python ] || "$UV" venv --quiet --python 3.12 .venv
 "$UV" pip install --quiet --python .venv/bin/python -r requirements.txt
 [ -d "/Applications/Google Chrome.app" ] || .venv/bin/python -m playwright install chromium
 
