@@ -19,7 +19,9 @@ from playwright.sync_api import sync_playwright
 
 from sites import SEARCH_TERMS, SITES
 
-STATE_FILE = "state.json"
+# "github" runs on GitHub's servers; "home" runs on your Mac for sites that block servers.
+WHERE = os.environ.get("TRACKER_WHERE", "github")
+STATE_FILE = "state.json" if WHERE == "github" else "state-home.json"
 RELIST_AFTER_DAYS = 3        # missing this long, then back = "restock / relisted"
 PRICE_DROP_PCT = 5           # notify if price falls at least this much
 MAX_MESSAGES_PER_RUN = 25
@@ -226,7 +228,17 @@ def find_chat_id():
     return 0
 
 
+def load_env_file(path=".env"):
+    """On the Mac, Telegram details live in a local .env file instead of GitHub secrets."""
+    if os.path.exists(path):
+        for line in open(path, encoding="utf-8"):
+            k, _, v = line.strip().partition("=")
+            if k and v:
+                os.environ.setdefault(k, v.strip().strip('"'))
+
+
 def main():
+    load_env_file()
     mode = sys.argv[1] if len(sys.argv) > 1 else "run"
     if mode == "find-chat-id":
         return find_chat_id()
@@ -235,20 +247,35 @@ def main():
         log("Test message sent." if ok else "Test message FAILED – check the secrets.")
         return 0 if ok else 1
 
-    with open(STATE_FILE, encoding="utf-8") as f:
-        state = json.load(f)
+    sites = [s for s in SITES if s.get("where", "github") == WHERE]
+    state = {"listings": {}}
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE, encoding="utf-8") as f:
+            state = json.load(f)
+    if (WHERE == "home" and mode != "force" and not state.get("last_failed_sites")
+            and state.get("last_run", "")[:10] == now().date().isoformat()):
+        log("Already checked today.")
+        return 0
     known = state.setdefault("listings", {})
     first_run = not known
 
     results, failed = {}, {}
     with sync_playwright() as p:
-        browser = p.chromium.launch()
-        ctx = browser.new_context(
-            locale="ka-GE", viewport={"width": 1366, "height": 2000},
-            user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                        "(KHTML, like Gecko) Chrome/129.0 Safari/537.36"))
+        if WHERE == "home":
+            # Your own Google Chrome, visible on screen, on your home internet.
+            try:
+                browser = p.chromium.launch(channel="chrome", headless=False)
+            except Exception:
+                browser = p.chromium.launch(headless=False)
+            ctx = browser.new_context(locale="ka-GE")
+        else:
+            browser = p.chromium.launch()
+            ctx = browser.new_context(
+                locale="ka-GE", viewport={"width": 1366, "height": 2000},
+                user_agent=("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                            "(KHTML, like Gecko) Chrome/129.0 Safari/537.36"))
         page = ctx.new_page()
-        for site in SITES:
+        for site in sites:
             try:
                 found = scrape_site(page, site)
                 results.update(found)
@@ -285,11 +312,11 @@ def main():
         send_telegram(fmt(lst, reason))
         time.sleep(1)
     if len(alerts) > MAX_MESSAGES_PER_RUN:
-        send_telegram(f"…and {len(alerts) - MAX_MESSAGES_PER_RUN} more. See state.json in GitHub.")
+        send_telegram(f"…and {len(alerts) - MAX_MESSAGES_PER_RUN} more.")
 
     if failed:
         lines = "\n".join(f"• {html.escape(n)} – {html.escape(r)}" for n, r in failed.items())
-        send_telegram(f"⚠️ Could not check {len(failed)} of {len(SITES)} site(s) today:\n{lines}")
+        send_telegram(f"⚠️ Could not check {len(failed)} of {len(sites)} site(s) today:\n{lines}")
 
     log(f"\nSummary: {len(results)} listing(s) seen, {len(alerts)} alert(s), "
         f"{len(failed)} site(s) failed.")

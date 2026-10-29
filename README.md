@@ -22,3 +22,13 @@ GitHub → **Actions** → **WalkingPad tracker** → **Run workflow**, then pic
 Settings → Secrets and variables → Actions:
 - `TELEGRAM_BOT_TOKEN` – from @BotFather
 - `TELEGRAM_CHAT_ID` – from the `find-chat-id` run
+
+## Mac (for sites that block GitHub)
+MyMarket.ge, Zoommer.ge, Alta.ge and ee.ge block GitHub's servers, so your Mac
+checks them from your home internet once a day (sites marked `"where": "home"`
+in `sites.py`). Setup, in Terminal:
+
+    curl -fsSL https://raw.githubusercontent.com/NickNotAvailable/walkingpad-tracker/main/install-mac.sh | bash
+
+Log: `~/walkingpad-tracker/tracker.log`. To stop:
+`launchctl unload ~/Library/LaunchAgents/ge.walkingpad.tracker.plist`
