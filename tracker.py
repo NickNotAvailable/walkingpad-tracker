@@ -135,7 +135,9 @@ def classify(item, site):
 
 
 def scrape_site(page, site):
+    """Returns (matching Z1/C2 listings, number of WalkingPad-related links seen)."""
     found = {}
+    related = set()
     errors = []
     for term in SEARCH_TERMS:
         url = site["url"].format(q=quote_plus(term))
@@ -155,6 +157,8 @@ def scrape_site(page, site):
                 if BLOCK_RE.search(body) and len(body) < 3000:
                     raise RuntimeError("blocked by anti-bot page")
                 for item in page.evaluate(EXTRACT_JS):
+                    if BRAND_RE.search(item["title"] + " " + item["text"][:300]):
+                        related.add(clean_url(item["href"]))
                     lst = classify(item, site)
                     if lst:
                         found.setdefault(clean_url(lst["url"]), lst)
@@ -168,7 +172,7 @@ def scrape_site(page, site):
             break  # site unreachable; don't hammer it with more terms
     if errors:
         raise RuntimeError(errors[0])
-    return found
+    return found, len(related)
 
 
 def priority(lst):
@@ -259,7 +263,7 @@ def main():
     known = state.setdefault("listings", {})
     first_run = not known
 
-    results, failed = {}, {}
+    results, failed, unsure = {}, {}, []
     with sync_playwright() as p:
         if WHERE == "home":
             # Your own Google Chrome, visible on screen, on your home internet.
@@ -277,9 +281,12 @@ def main():
         page = ctx.new_page()
         for site in sites:
             try:
-                found = scrape_site(page, site)
+                found, related = scrape_site(page, site)
                 results.update(found)
-                log(f"OK   {site['name']}: {len(found)} matching listing(s)")
+                log(f"OK   {site['name']}: {len(found)} Z1/C2 listing(s), "
+                    f"{related} WalkingPad-related link(s) on the results page")
+                if related == 0:
+                    unsure.append(site["name"])
             except Exception as e:
                 failed[site["name"]] = str(e)
                 log(f"FAIL {site['name']}: {e}")
@@ -318,6 +325,9 @@ def main():
         lines = "\n".join(f"• {html.escape(n)} – {html.escape(r)}" for n, r in failed.items())
         send_telegram(f"⚠️ Could not check {len(failed)} of {len(sites)} site(s) today:\n{lines}")
 
+    if unsure:
+        log("Note: no WalkingPad items at all on: " + ", ".join(unsure) +
+            ". Either none are listed, or that site's search address needs fixing.")
     log(f"\nSummary: {len(results)} listing(s) seen, {len(alerts)} alert(s), "
         f"{len(failed)} site(s) failed.")
     state["last_run"] = ts.isoformat()
