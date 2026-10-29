@@ -1,13 +1,5 @@
 {
- "last_failed_sites": {
-  "Alta.ge": "RuntimeError: HTTP 403",
-  "Elit Electronics (ee.ge)": "RuntimeError: HTTP 403",
-  "Megatechnica.ge": "RuntimeError: HTTP 404",
-  "Metromart.ge": "RuntimeError: HTTP 500",
-  "MyMarket.ge": "RuntimeError: HTTP 403",
-  "SS.ge": "RuntimeError: HTTP 404",
-  "Zoommer.ge": "RuntimeError: HTTP 403"
- },
- "last_run": "2026-10-29T17:32:47.001236+00:00",
+ "last_failed_sites": {},
+ "last_run": "2026-10-29T18:16:32.576410+00:00",
  "listings": {}
 }
